@@ -1,6 +1,6 @@
 import { Characteristic, CharacteristicEventTypes, CharacteristicProps, CharacteristicSetCallback, CharacteristicValue, Logger, Service,
   SessionIdentifier, WithUUID } from 'homebridge';
-import { BasicAccessory, ServiceHandler } from '../src/converters/interfaces';
+import { BasicAccessory, BasicPlatform, ServiceHandler } from '../src/converters/interfaces';
 import { DeviceDefinition, DeviceListEntry, ExposesEntry, isDeviceDefinition, isDeviceListEntry } from '../src/z2mModels';
 import { mock, mockClear, MockProxy } from 'jest-mock-extended';
 import { when } from 'jest-when';
@@ -212,6 +212,7 @@ export class ServiceHandlersTestHarness {
   constructor() {
     this.accessoryMock = mock<BasicAccessory>();
     this.accessoryMock.log = mock<Logger>();
+    this.accessoryMock.platform = mock<BasicPlatform>();
 
     // Mock implementations of certain accessory functions
     this.accessoryMock.isValueAllowedForProperty
@@ -248,6 +249,9 @@ export class ServiceHandlersTestHarness {
           testHandler.serviceHandler = serviceHandler;
         }
       });
+
+    // Mock implementation for certain platform functions
+    this.accessoryMock.platform.isHomebridgeServerVersionGreaterOrEqualTo.mockImplementation(() => false);
   }
 
   configureAllowedValues(property: string, values: string[]) {
@@ -368,7 +372,7 @@ export class ServiceHandlersTestHarness {
               .toHaveBeenCalledWith(CharacteristicEventTypes.SET, expect.anything());
 
             // Store set callback for future tests
-            mapping.setFunction = mapping.mock.on.mock.calls[0][1] as HomebridgeCharacteristicSetCallback;
+            mapping.setFunction = (mapping.mock.on.mock.calls[0][1] as unknown) as HomebridgeCharacteristicSetCallback;
           }
         }
       }

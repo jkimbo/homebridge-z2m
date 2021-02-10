@@ -5,6 +5,10 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 Since version 1.0.0, we try to follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard.
 
 ## [Unreleased]
+### Added
+
+- **Adaptive Lighting** is now available for all lights that expose at least a brightness feature and a color temperature feature.
+  Note that for this feature to become visible you must run Homebridge v1.3.0 (which is currently in beta).
 
 ## [1.1.1] - 2021-02-09
 ### Fixed
