@@ -3,8 +3,7 @@ import { BasicAccessory, BasicLogger, BasicPlatform, ServiceHandler } from '../c
 
 class DocsPlatform implements BasicPlatform {
   isHomebridgeServerVersionGreaterOrEqualTo(version: string): boolean {
-    // Always return true
-    return true;
+    return version.length > 0;
   }
 }
 
