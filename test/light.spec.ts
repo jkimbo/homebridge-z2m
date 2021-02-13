@@ -152,8 +152,8 @@ describe('Light', () => {
 }`;
 
     // Shared "state"
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -164,6 +164,11 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+
+        // Set server version to 1.3.0 so that Adaptive Lighting should be available
+        newHarness.serverVersion = '1.3.0';
+        newHarness.numberOfExpectedControllers = 1;
+
         newHarness.getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
           .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true)
@@ -172,7 +177,7 @@ describe('Light', () => {
           .addExpectedCharacteristic('hue', hap.Characteristic.Hue, true, undefined, false)
           .addExpectedCharacteristic('saturation', hap.Characteristic.Saturation, true, undefined, false);
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -231,7 +236,7 @@ describe('Light', () => {
       expect(harness).toBeDefined();
       harness.checkUpdateState(
         '{"color":{"x":0.44416,"y":0.51657}}',
-        hap.Service.Lightbulb, 
+        hap.Service.Lightbulb,
         new Map([
           [hap.Characteristic.Hue, 60],
           [hap.Characteristic.Saturation, 100],
@@ -269,7 +274,7 @@ describe('Light', () => {
       harness.getOrAddHandler(hap.Service.Lightbulb)
         .callAndCheckHomeKitSetCallback('hue', 0)
         .callAndCheckHomeKitSetCallback('saturation', 100);
-      harness.checkSetDataQueued({color: {x: 0.70061, y: 0.2993}});
+      harness.checkSetDataQueued({ color: { x: 0.70061, y: 0.2993 } });
     });
 
     test('HomeKit: Change color to green', () => {
@@ -277,7 +282,7 @@ describe('Light', () => {
       harness.getOrAddHandler(hap.Service.Lightbulb)
         .callAndCheckHomeKitSetCallback('hue', 120)
         .callAndCheckHomeKitSetCallback('saturation', 100);
-      harness.checkSetDataQueued({color: {x: 0.17242, y: 0.7468}});
+      harness.checkSetDataQueued({ color: { x: 0.17242, y: 0.7468 } });
     });
 
     test('HomeKit: Change color to blue', () => {
@@ -285,7 +290,7 @@ describe('Light', () => {
       harness.getOrAddHandler(hap.Service.Lightbulb)
         .callAndCheckHomeKitSetCallback('hue', 240)
         .callAndCheckHomeKitSetCallback('saturation', 100);
-      harness.checkSetDataQueued({color: {x: 0.1355, y: 0.03988}});
+      harness.checkSetDataQueued({ color: { x: 0.1355, y: 0.03988 } });
     });
 
     test('HomeKit: Change color to pink', () => {
@@ -293,7 +298,7 @@ describe('Light', () => {
       harness.getOrAddHandler(hap.Service.Lightbulb)
         .callAndCheckHomeKitSetCallback('hue', 300)
         .callAndCheckHomeKitSetCallback('saturation', 100);
-      harness.checkSetDataQueued({color: {x: 0.38547, y: 0.15463}});
+      harness.checkSetDataQueued({ color: { x: 0.38547, y: 0.15463 } });
     });
 
     test('HomeKit: Change color to yellow', () => {
@@ -301,7 +306,7 @@ describe('Light', () => {
       harness.getOrAddHandler(hap.Service.Lightbulb)
         .callAndCheckHomeKitSetCallback('hue', 60)
         .callAndCheckHomeKitSetCallback('saturation', 100);
-      harness.checkSetDataQueued({color: {x: 0.44416, y: 0.51657}});
+      harness.checkSetDataQueued({ color: { x: 0.44416, y: 0.51657 } });
     });
   });
 
@@ -415,8 +420,8 @@ describe('Light', () => {
     }`;
 
     // Shared "state"
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -427,11 +432,16 @@ describe('Light', () => {
 
         // Check service creation
         const newHarness = new ServiceHandlersTestHarness();
+
+        // Set server version to 1.3.0 so that Adaptive Lighting should be available
+        // to verify that it will not be created if the light does not support Color Temperature
+        newHarness.serverVersion = '1.3.0';
+
         newHarness.getOrAddHandler(hap.Service.Lightbulb)
           .addExpectedCharacteristic('state', hap.Characteristic.On, true)
           .addExpectedCharacteristic('brightness', hap.Characteristic.Brightness, true);
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -511,7 +521,6 @@ describe('Light', () => {
       harness.checkHomeKitUpdateWithSingleValue(hap.Service.Lightbulb, 'brightness', 100, 254);
     });
   });
-
 
   describe('OSRAM Lightify LED CLA60 E27 RGBW', () => {
     const deviceModelJson = `{
@@ -759,8 +768,8 @@ describe('Light', () => {
   }`;
 
     // Shared "state"
-    let deviceExposes : ExposesEntry[] = [];
-    let harness : ServiceHandlersTestHarness;
+    let deviceExposes: ExposesEntry[] = [];
+    let harness: ServiceHandlersTestHarness;
 
     beforeEach(() => {
       // Only test service creation for first test case and reuse harness afterwards
@@ -779,7 +788,7 @@ describe('Light', () => {
           .addExpectedCharacteristic('hue', hap.Characteristic.Hue, true, undefined, false)
           .addExpectedCharacteristic('saturation', hap.Characteristic.Saturation, true, undefined, false);
         newHarness.prepareCreationMocks();
-        
+
         newHarness.callCreators(deviceExposes);
 
         newHarness.checkCreationExpectations();
@@ -838,7 +847,7 @@ describe('Light', () => {
       expect(harness).toBeDefined();
       harness.checkUpdateState(
         '{"color":{"hue":60,"saturation":100}}',
-        hap.Service.Lightbulb, 
+        hap.Service.Lightbulb,
         new Map([
           [hap.Characteristic.Hue, 60],
           [hap.Characteristic.Saturation, 100],
@@ -876,7 +885,7 @@ describe('Light', () => {
       harness.getOrAddHandler(hap.Service.Lightbulb)
         .callAndCheckHomeKitSetCallback('hue', 0)
         .callAndCheckHomeKitSetCallback('saturation', 100);
-      harness.checkSetDataQueued({color: {hue: 0, saturation: 100}});
+      harness.checkSetDataQueued({ color: { hue: 0, saturation: 100 } });
     });
 
     test('HomeKit: Change color to pink', () => {
@@ -884,7 +893,7 @@ describe('Light', () => {
       harness.getOrAddHandler(hap.Service.Lightbulb)
         .callAndCheckHomeKitSetCallback('hue', 300)
         .callAndCheckHomeKitSetCallback('saturation', 100);
-      harness.checkSetDataQueued({color: {hue: 300, saturation: 100}});
+      harness.checkSetDataQueued({ color: { hue: 300, saturation: 100 } });
     });
   });
 });
